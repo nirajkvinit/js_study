@@ -1,0 +1,21 @@
+{
+  "name": "ex1",
+  "homepage": "https://github.com/nirajkvinit/js_study",
+  "authors": [
+    "Niraj Kumar <nirajkvinit@gmail.com>"
+  ],
+  "description": "",
+  "main": "",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "underscore": "^1.8.3"
+  }
+}
