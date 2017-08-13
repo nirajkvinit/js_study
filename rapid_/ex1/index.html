@@ -2,8 +2,7 @@
 <html>
 	<head>
 		<title>ISS Flyover</title>
-		<!-- Latest compiled and minified CSS -->
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+		<link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
 		<style>
 			.container {
 				max-width: 600px;
@@ -15,11 +14,13 @@
 			<div class="page-header">
 				<h1>See the station <small>Spot the ISS</small></h1>
 				<div class="text-center">
-					<button class="btn btn-default"></button>
+					<button class="btn btn-default" id="refresh">Refresh</button>
 				</div>
 			</div>
 			<div id="flyover"></div>
 		</div>
+		<script src="node_modules/jquery/dist/jquery.min.js"></script>
+		<script src="node_modules/underscore/underscore.js"></script>
 		<script src="script.js"></script>
 	</body>
 </html>
