@@ -1,11 +1,8 @@
 function ISSFlyover() {
-	this.refreshData();
-	//var boundRefresh = _.bind(this.refreshData, this);
-	//$("#refresh").on('click', boundRefresh);
-
-	//this.refreshData = _.bind(this.refreshData, this);
+	this.refreshData();	
 	_.bindAll(this, 'refreshData', 'gotRefreshedData');
-	$("#refresh").on('click', this.refreshData);
+	$('#refresh').on('click', this.refreshData);
+	$('#latitude, #longitude').on('change keypress', _.debounce(this.refreshData, 1000));
 }
 
 _.extend(ISSFlyover.prototype, {
@@ -57,7 +54,7 @@ _.extend(ISSFlyover.prototype, {
 
 	refreshData: function() {
 		var me = this;
-		var location = {lat: 50.8, lon: -0.3667};
+		var location = {lat: $("#latitude").val(), lon: $("#longitude").val()};
 		jQuery.getJSON("http://api.open-notify.org/astros.json?callback=?", function(astronauts) {
 			jQuery.getJSON("http://api.open-notify.org/iss-pass.json?callback=?", _.extend({n: 100}, location), function(iss){
 				jQuery.getJSON("http://api.openweathermap.org/data/2.5/forecast?appid=c534c34f3ccd195019b48b18d8c5afbd&callback=?", location, function(weather){
@@ -65,7 +62,6 @@ _.extend(ISSFlyover.prototype, {
 				});
 			});
 		});
-			
 	}
 });
 
