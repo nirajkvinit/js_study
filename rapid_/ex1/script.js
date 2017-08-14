@@ -1,12 +1,4 @@
 function gotRefreshedData(iss, weather){
-	console.log('ISS Flyovers:', iss);	
-	console.log('Weather', weather);	
-
-	// Old Method
-	/*for (var i = 0; i < iss.response.length; i++) {
-		console.log(iss.response[i]);
-	}*/
-
 	// Underscore method
 	function outputFlyover(flyover, i) {
 		$("#flyovers").append('<div>Flyover at ' + flyover.risetime + ' : ' + flyover.weatherDescription + '</div>');
@@ -30,34 +22,30 @@ function gotRefreshedData(iss, weather){
 	}
 
 	var flyovers = _.map(iss.response, processFlyoverData);
-	
-	/*var flyoversWithWeather = _.filter(flyovers, function (flyover) {
-		return flyover.hasWeather;
-	});*/
-	
+
 	var flyoversWithWeather = _.where(flyovers, {hasWeather: true});
 
 	var flyoversGrouped = _.groupBy(flyoversWithWeather, getDay);
 
-	var days = _.keys(flyoversGrouped);
+	//var days = _.keys(flyoversGrouped);
 
-	//_.each(flyoversWithWeather, outputFlyover);
-	_.each(days, function (day) {
+	_.each(flyoversGrouped, function (flyoversForDay, day) {
 		$('#flyovers').append('<h2>' + day + '</h2>');
-		var flyoversForDay = flyoversGrouped[day];
-		/*flyoversForDay = _.sortBy(flyoversForDay, function (flyover) {
-			return flyover.clouds;
-		});*/
+		//var flyoversForDay = flyoversGrouped[day];		
 		flyoversForDay = _.sortBy(flyoversForDay, 'clouds');
 		_.each(flyoversForDay, outputFlyover);
+	});
+
+	var summary = _.countBy(flyoversWithWeather, 'weatherDescription');
+	$("#summary").html('');
+	_.each(summary, function (count, condition) {
+		$('#summary').append('<div><b>' + condition + '</b>:' + count + '</div>');
 	});
 }
 
 function refreshData() {
 	jQuery.getJSON("http://api.open-notify.org/iss-pass.json?lat=50.08&lon=-0.3667&n=100&callback=?", function(iss){
-		console.log('Got ISS Data');
 		jQuery.getJSON("http://api.openweathermap.org/data/2.5/forecast?lat=50.08&lon=-0.3667&appid=c534c34f3ccd195019b48b18d8c5afbd&callback=?", function(weather){
-			console.log('Got Weather Data');
 			gotRefreshedData(iss, weather);
 		});
 	});
