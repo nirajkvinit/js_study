@@ -2,6 +2,7 @@
 <html>
 	<head>
 		<title>ISS Flyover</title>
+		<meta charset="utf-8"/>
 		<link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
 		<style>
 			.container {
@@ -16,7 +17,8 @@
 				<div class="text-center">
 					<button class="btn btn-default" id="refresh">Refresh</button>
 				</div>
-				<div><b>On the Station right now</b> <span id="astronauts"></span></div>
+				<div><b>On the Station right now</b> <span id="span_astronauts"></span></div>
+				<hr>
 				<div>
 					Latitude: <input id="latitude" type="text" value="50.84">
 					Longitude: <input id="longitude" type="text" value="-0.3668">
@@ -26,7 +28,7 @@
 			<div id="summary"></div>
 
 			<h2>Flyovers</h2>
-			<div id="flyovers"></div>
+			<div id="div_flyovers"></div>
 		</div>
 		<script src="node_modules/jquery/dist/jquery.min.js"></script>
 		<script src="node_modules/underscore/underscore.js"></script>

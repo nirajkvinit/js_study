@@ -1,22 +1,23 @@
 function ISSFlyover() {
-	this.refreshData();	
 	_.bindAll(this, 'refreshData', 'gotRefreshedData');
+	this.refreshData();	
 	$('#refresh').on('click', this.refreshData);
 	$('#latitude, #longitude').on('change keypress', _.debounce(this.refreshData, 1000));
 }
 
 _.extend(ISSFlyover.prototype, {
+	gotRefreshedData: function () {
+		var me = this;
 
-	gotRefreshedData: function(iss, weather, astronauts){
-		var atTheISS = _.pluck(_.where(astronauts.people, {craft: "ISS"}), "name");
-		$('#astronauts').text(atTheISS.join(", "));
+		var atTheISS = _.pluck(_.where(this.astronauts.people, {craft: "ISS"}), "name");
+		$('#span_astronauts').text(atTheISS.join(", "));
 
 		function outputFlyover(flyover, i) {
-			$("#flyovers").append('<div>Flyover at ' + flyover.risetime + ' : ' + flyover.weatherDescription + '</div>');
+			$("#div_flyovers").append('<div>Flyover at ' + flyover.risetime + ' : ' + flyover.weatherDescription + '</div>');
 		}
 
 		function processFlyoverData(flyover) {
-			var weatherAtFlyover = _.find(weather.list, function(w) {
+			var weatherAtFlyover = _.find(me.weather.list, function(w) {
 				return w.dt <=flyover.risetime && w.dt + 60*60*3 > flyover.risetime;
 			});
 			return {
@@ -32,15 +33,14 @@ _.extend(ISSFlyover.prototype, {
 			return flyover.risetime.toDateString();
 		}
 
-		var flyovers = _.map(iss.response, processFlyoverData);
+		var flyovers = _.map(me.iss.response, processFlyoverData);
 
 		var flyoversWithWeather = _.where(flyovers, {hasWeather: true});
 
 		var flyoversGrouped = _.groupBy(flyoversWithWeather, getDay);
 
 		_.each(flyoversGrouped, function (flyoversForDay, day) {
-			$('#flyovers').append('<h2>' + day + '</h2>');
-			//var flyoversForDay = flyoversGrouped[day];		
+			$('#div_flyovers').append('<h2>' + day + '</h2>');
 			flyoversForDay = _.sortBy(flyoversForDay, 'clouds');
 			_.each(flyoversForDay, outputFlyover);
 		});
@@ -55,13 +55,18 @@ _.extend(ISSFlyover.prototype, {
 	refreshData: function() {
 		var me = this;
 		var location = {lat: $("#latitude").val(), lon: $("#longitude").val()};
-		jQuery.getJSON("http://api.open-notify.org/astros.json?callback=?", function(astronauts) {
-			jQuery.getJSON("http://api.open-notify.org/iss-pass.json?callback=?", _.extend({n: 100}, location), function(iss){
-				jQuery.getJSON("http://api.openweathermap.org/data/2.5/forecast?appid=c534c34f3ccd195019b48b18d8c5afbd&callback=?", location, function(weather){
-					me.gotRefreshedData(iss, weather, astronauts);
-				});
+
+		var complete = _.after(3, this.gotRefreshedData);
+
+		var getData = function (property, url, options) {
+			jQuery.getJSON(url, options, function (data) {
+				me[property] = data;
+				complete();
 			});
-		});
+		};
+		getData('iss', "http://api.open-notify.org/iss-pass.json?callback=?", _.extend({n: 100}, location));
+		getData('weather', "http://api.openweathermap.org/data/2.5/forecast?appid=c534c34f3ccd195019b48b18d8c5afbd&callback=?", location);
+		getData('astronauts', "http://api.open-notify.org/astros.json?callback=?", {});
 	}
 });
 
