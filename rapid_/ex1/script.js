@@ -1,5 +1,14 @@
-function gotRefreshedData(iss, weather){
-	// Underscore method
+function gotRefreshedData(iss, weather, astronauts){
+	
+	/*var atTheISS = _.where(astronauts.people, {craft: "ISS"});
+	// atTheISS = _.map(atTheISS, function (person) {
+	// 	return person.name;
+	// });
+
+	atTheISS = _.pluck(atTheISS, "name");*/
+	var atTheISS = _.pluck(_.where(astronauts.people, {craft: "ISS"}), "name");
+	$('#astronauts').text(atTheISS.join(", "));
+
 	function outputFlyover(flyover, i) {
 		$("#flyovers").append('<div>Flyover at ' + flyover.risetime + ' : ' + flyover.weatherDescription + '</div>');
 	}
@@ -44,11 +53,15 @@ function gotRefreshedData(iss, weather){
 }
 
 function refreshData() {
-	jQuery.getJSON("http://api.open-notify.org/iss-pass.json?lat=50.08&lon=-0.3667&n=100&callback=?", function(iss){
-		jQuery.getJSON("http://api.openweathermap.org/data/2.5/forecast?lat=50.08&lon=-0.3667&appid=c534c34f3ccd195019b48b18d8c5afbd&callback=?", function(weather){
-			gotRefreshedData(iss, weather);
+	var location = {lat: 50.8, lon: -0.3667};
+	jQuery.getJSON("http://api.open-notify.org/astros.json?callback=?", function(astronauts) {
+		jQuery.getJSON("http://api.open-notify.org/iss-pass.json?callback=?", _.extend({n: 100}, location), function(iss){
+			jQuery.getJSON("http://api.openweathermap.org/data/2.5/forecast?appid=c534c34f3ccd195019b48b18d8c5afbd&callback=?", location, function(weather){
+				gotRefreshedData(iss, weather, astronauts);
+			});
 		});
 	});
+		
 }
 
 $("#refresh").on('click', refreshData);
