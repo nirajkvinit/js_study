@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Javascript Maze</title>
+	</head>
+	<body>
+		<div id="page">
+			Loading...
+		</div>
+		<script type="text/javascript" src="js/robot.js"></script>
+		<script type="text/javascript" src="js/maze.js"></script>
+		<script type="text/javascript" src="js/mazespace.js"></script>
+		<script type="text/javascript">
+			m = new Maze(7, 5);
+			m.setStart(1, 1, "north");
+			m.setEnd(7, 1);
+		</script>
+	</body>
+</html>
