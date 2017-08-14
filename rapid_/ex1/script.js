@@ -39,10 +39,13 @@ _.extend(ISSFlyover.prototype, {
 
 		var flyoversGrouped = _.groupBy(flyoversWithWeather, getDay);
 
+		var dayTemplate = _.template($('#day-template').html());
+
 		_.each(flyoversGrouped, function (flyoversForDay, day) {
-			$('#div_flyovers').append('<h2>' + day + '</h2>');
 			flyoversForDay = _.sortBy(flyoversForDay, 'clouds');
-			_.each(flyoversForDay, outputFlyover);
+			$('#div_flyovers').append(dayTemplate({title: day, flyovers: flyoversForDay}));
+			//$('#div_flyovers').append('<h2>' + day + '</h2>');
+			//_.each(flyoversForDay, outputFlyover);
 		});
 
 		var summary = _.countBy(flyoversWithWeather, 'weatherDescription');
