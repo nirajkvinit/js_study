@@ -12,10 +12,6 @@ _.extend(ISSFlyover.prototype, {
 		var atTheISS = _.pluck(_.where(this.astronauts.people, {craft: "ISS"}), "name");
 		$('#span_astronauts').text(atTheISS.join(", "));
 
-		function outputFlyover(flyover, i) {
-			$("#div_flyovers").append('<div>Flyover at ' + flyover.risetime + ' : ' + flyover.weatherDescription + '</div>');
-		}
-
 		function processFlyoverData(flyover) {
 			var weatherAtFlyover = _.find(me.weather.list, function(w) {
 				return w.dt <=flyover.risetime && w.dt + 60*60*3 > flyover.risetime;
@@ -29,30 +25,31 @@ _.extend(ISSFlyover.prototype, {
 			}
 		}
 
-		function getDay(flyover) {
+		function getDay (flyover) {
 			return flyover.risetime.toDateString();
 		}
 
-		var flyovers = _.map(me.iss.response, processFlyoverData);
+		function showDay (flyoversForDay, day) {
+			flyoversForDay = _.sortBy(flyoversForDay, 'clouds');
+			$('#div_flyovers').append(dayTemplate({title: day, flyovers: flyoversForDay}));
+		}
 
-		var flyoversWithWeather = _.where(flyovers, {hasWeather: true});
-
-		var flyoversGrouped = _.groupBy(flyoversWithWeather, getDay);
+		function showSummary(flyoversWithWeather) {
+			var summary = _.countBy(flyoversWithWeather, 'weatherDescription');
+			$("#summary").html('');
+			_.each(summary, function (count, condition) {
+				$('#summary').append('<div><b>' + condition + '</b>:' + count + '</div>');
+			});	
+		}
 
 		var dayTemplate = _.template($('#day-template').html());
 
-		_.each(flyoversGrouped, function (flyoversForDay, day) {
-			flyoversForDay = _.sortBy(flyoversForDay, 'clouds');
-			$('#div_flyovers').append(dayTemplate({title: day, flyovers: flyoversForDay}));
-			//$('#div_flyovers').append('<h2>' + day + '</h2>');
-			//_.each(flyoversForDay, outputFlyover);
-		});
-
-		var summary = _.countBy(flyoversWithWeather, 'weatherDescription');
-		$("#summary").html('');
-		_.each(summary, function (count, condition) {
-			$('#summary').append('<div><b>' + condition + '</b>:' + count + '</div>');
-		});
+		_.chain(this.iss.response)
+			.map(processFlyoverData)
+			.where({hasWeather: true})
+			.tap(showSummary)
+			.groupBy(getDay)
+			.each(showDay);		
 	},
 
 	refreshData: function() {
