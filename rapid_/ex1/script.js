@@ -1,13 +1,38 @@
 function gotRefreshedData(iss, weather){
-	console.log('Processing data');
-	console.log('ISS Flyovers:');
-	console.log(iss);
-	console.log('Weather');
-	console.log(weather);
+	console.log('ISS Flyovers:', iss);	
+	console.log('Weather', weather);	
 
-	for (var i = 0; i < iss.response.length; i++) {
+	// Old Method
+	/*for (var i = 0; i < iss.response.length; i++) {
 		console.log(iss.response[i]);
+	}*/
+
+	// Underscore method
+	function outputFlyover(flyover, i) {
+		$("#flyovers").append('<div>Flyover at ' + flyover.risetime + ' : ' + flyover.weatherDescription + '</div>');
 	}
+
+	function processFlyoverData(flyover) {
+		var weatherAtFlyover = _.find(weather.list, function(w) {
+			return w.dt <=flyover.risetime && w.dt + 60*60*3 > flyover.risetime;
+		});
+		return {
+			hasWeather: !_.isUndefined(weatherAtFlyover),
+			weatherDescription: weatherAtFlyover && weatherAtFlyover.weather[0].description,
+			risetime: new Date(flyover.risetime*1000),
+			duration: flyover.duration
+		}
+	}
+
+	var flyovers = _.map(iss.response, processFlyoverData);
+	
+	/*var flyoversWithWeather = _.filter(flyovers, function (flyover) {
+		return flyover.hasWeather;
+	});*/
+	
+	var flyoversWithWeather = _.where(flyovers, {hasWeather: true});
+
+	_.each(flyoversWithWeather, outputFlyover);
 }
 
 function refreshData() {
