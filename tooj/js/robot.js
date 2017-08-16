@@ -41,3 +41,52 @@ Robot.prototype.turnLeft = function () {
     this.orientation = lefts[this.orientation];
     return true;
 }
+
+Robot.prototype.moveForward = function() {
+
+    if (!this.canMoveForward()) {
+        return false;
+    }
+
+    switch(this.orientation) {
+        case "north":
+            this.y++;
+            break;
+        case "east":
+            this.x++;
+            break;
+        case "west":
+            this.x--;
+            break;
+        case "south":
+            this.y--;
+            break;
+
+    }
+    return true;
+}
+
+Robot.prototype.canMoveForward = function () {
+    if (!this.maze) {
+        return false;
+    }
+    return this.maze.canMove(this.x, this.y, this.orientation);
+}
+
+Robot.prototype.exitMaze = function(steps) {
+    if (this.maze) {
+        while (steps !=0) {
+            steps--;
+            if (this.canMoveForward()) {
+                this.moveForward();
+                this.turnLeft();
+            } else {
+                this.turnRight();
+            }
+            if (this.x == this.maze.endX && this.y == this.maze.endY) {
+                return true;
+            }
+        }
+        return false;
+    }
+}
