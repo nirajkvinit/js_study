@@ -1,0 +1,12 @@
+{
+  "name": "twitter",
+  "version": "0.0.0",
+  "description": "Sample application to query Twitter and cache results in Redis",
+  "main": "index.js",
+  "author": "Scott Ganyo",
+  "license": "ISC",
+  "dependencies": {
+    "twit" : "",
+    "redis" : ""
+  }
+}
