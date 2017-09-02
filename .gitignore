@@ -1,2 +1,3 @@
 node_modules/
 rapid_redis/config.js
+/rapid_redis/config.js
