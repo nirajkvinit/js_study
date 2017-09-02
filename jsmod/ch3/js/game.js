@@ -23,8 +23,9 @@ var game = function(){
 	function calculateScore() {
 		var problemsInGame = getProblemCount();
 		var score = 0;
-		for (var i = 1; i < problemsInGame; i++) {
+		for (var i = 1; i <= problemsInGame; i++) {
 			var answer = document.getElementById('answer' + i).value;
+			console.log(i*factorElement.value+' , '+ answer)
 			if(i * factorElement.value == answer) {
 				score++;
 			}
