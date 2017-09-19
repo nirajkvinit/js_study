@@ -1,5 +1,7 @@
 var Scoreboard = function() {
 
+	console.log('Creating a scoreboard...');
+
 	var results = [];
 
 	function addResult(newResult) {
