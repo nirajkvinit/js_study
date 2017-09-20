@@ -1,4 +1,5 @@
 var game = function(){
+	
 	var factorElement = document.getElementById('factor');
 	var problemsPerGame = 3;
 

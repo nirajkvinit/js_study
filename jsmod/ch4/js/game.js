@@ -1,9 +1,14 @@
-var game = function(){
+define(['./player', './scoreboard'], function(player, scoreboard){
+
+
+
 	var factorElement = document.getElementById('factor');
 	var problemsPerGame = 3;
 
 	function printGame() {
+
 		player.logPlayer();
+
 		setProblemCount(document.getElementById('problemCount').value);
 		var gameForm = '';
 		for (var i = 1; i <= problemsPerGame; i++) {
@@ -38,7 +43,7 @@ var game = function(){
 			factor: factorElement.value
 		};
 
-		var scoreboard = new Scoreboard();
+		//var scoreboard = new Scoreboard();
 		scoreboard.addResult(result);
 		scoreboard.updateScoreboard();
 
@@ -59,4 +64,4 @@ var game = function(){
 		setProblemCount: setProblemCount,
 		getProblemCount: getProblemCount
 	}
-}();
+});

@@ -1,5 +1,5 @@
-var Scoreboard = function() {
-
+define([], function(){
+	
 	console.log('Creating a scoreboard...');
 
 	var results = [];
@@ -25,4 +25,4 @@ var Scoreboard = function() {
 		addResult : addResult,
 		updateScoreboard: updateScoreboard
 	}
-};
+});

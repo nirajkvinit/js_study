@@ -1,5 +1,7 @@
-(function(){
-	console.log('Starting MultiMath with an IIFE');
+define(['./game', './player'], function(game, player) {
+
+	console.log('Loading with RequireJS');
+	
 	document.getElementById('startGame').addEventListener('click', function() {
 		player.setName(document.getElementById('playername').value);
 		game.printGame();
@@ -10,5 +12,4 @@
 	});
 
 	document.getElementById('problemCount').value = game.getProblemCount();
-
-})();
+});

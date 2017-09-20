@@ -1,4 +1,4 @@
-var player = function() {
+define([], function() {
 
 	var playerName = '';
 
@@ -20,4 +20,4 @@ var player = function() {
 		getName: getName
 	}
 
-}();
+});
